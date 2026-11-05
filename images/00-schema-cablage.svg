@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="Segoe UI, Arial, sans-serif" font-size="14">
+  <title>Schéma de câblage : supervision d'une cuve (2023)</title>
+  <rect width="900" height="520" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-size="19" font-weight="600" fill="#111">Câblage de la cuve 1 et liaison avec l'interface</text>
+
+  <rect x="330" y="140" width="240" height="220" rx="8" fill="#e9eef5" stroke="#3b5b85" stroke-width="2"/>
+  <text x="450" y="168" text-anchor="middle" font-weight="600" fill="#1f3550">Arduino Uno</text>
+  <text x="450" y="188" text-anchor="middle" fill="#1f3550">+ shield Grove</text>
+  <g fill="#111">
+    <text x="342" y="232">A0</text>
+    <text x="342" y="282">D4</text>
+    <text x="342" y="332">A1</text>
+    <text x="558" y="232" text-anchor="end">USB (série)</text>
+    <text x="558" y="332" text-anchor="end">D2</text>
+  </g>
+
+  <g stroke="#222" stroke-width="2">
+    <line x1="330" y1="227" x2="240" y2="227"/>
+    <line x1="330" y1="277" x2="240" y2="277"/>
+    <line x1="330" y1="327" x2="240" y2="327"/>
+    <line x1="570" y1="227" x2="650" y2="227"/>
+  </g>
+  <line x1="570" y1="327" x2="650" y2="327" stroke="#999" stroke-width="2" stroke-dasharray="6 4"/>
+
+  <rect x="40" y="205" width="200" height="44" rx="6" fill="#fff6dc" stroke="#b08a1e"/>
+  <text x="140" y="225" text-anchor="middle" font-weight="600">Température Grove</text>
+  <text x="140" y="242" text-anchor="middle" font-size="12" fill="#555">thermistance 100 kΩ, B = 4275</text>
+  <rect x="40" y="255" width="200" height="44" rx="6" fill="#eaf6ea" stroke="#3c8a3c"/>
+  <text x="140" y="275" text-anchor="middle" font-weight="600">Ultrasons Grove</text>
+  <text x="140" y="292" text-anchor="middle" font-size="12" fill="#555">distance à la surface (cm)</text>
+  <rect x="40" y="305" width="200" height="44" rx="6" fill="#e6f0ff" stroke="#3b5b85"/>
+  <text x="140" y="325" text-anchor="middle" font-weight="600">Turbidité (analogique)</text>
+  <text x="140" y="342" text-anchor="middle" font-size="12" fill="#555">0 à 5 V → NTU</text>
+
+  <rect x="650" y="195" width="210" height="70" rx="6" fill="#f0f0f0" stroke="#555"/>
+  <text x="755" y="218" text-anchor="middle" font-weight="600">PC : interface Processing</text>
+  <text x="755" y="237" text-anchor="middle" font-size="12" fill="#555">9600 bauds, trame :</text>
+  <text x="755" y="254" text-anchor="middle" font-size="12" fill="#555">« T,remplissage,NTU\r\n »</text>
+
+  <rect x="650" y="305" width="210" height="50" rx="6" fill="#fde8e8" stroke="#c8102e" stroke-dasharray="6 4"/>
+  <text x="755" y="326" text-anchor="middle" font-weight="600">Relais + électrovanne</text>
+  <text x="755" y="343" text-anchor="middle" font-size="12" fill="#555">prévue, jamais commandée</text>
+
+  <rect x="40" y="400" width="820" height="70" rx="8" fill="#f7fbff" stroke="#9db7d5"/>
+  <text x="450" y="425" text-anchor="middle" font-weight="600" fill="#1f3550">Bassin : 4 cuves</text>
+  <text x="450" y="447" text-anchor="middle" font-size="12" fill="#555">Seule la cuve 1 est équipée de capteurs ; les cuves 2 à 4 n'existent que dans l'interface</text>
+  <line x1="140" y1="349" x2="140" y2="400" stroke="#999" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+  <text x="450" y="505" text-anchor="middle" font-size="12" fill="#555">Brochage déduit du code de 2023. Détail et comportement exact : docs/brochage.md</text>
+</svg>
