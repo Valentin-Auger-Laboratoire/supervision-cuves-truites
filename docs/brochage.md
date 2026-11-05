@@ -24,7 +24,7 @@ Sources :
 | Température | `R = R0·(1023/a − 1)`, puis `T = 1 / (ln(R/R0)/B + 1/298,15) − 273,15`. Si `a = 0` (capteur débranché) ou `a = 1023`, la formule donne −273,15 °C |
 | Remplissage | `(2000 − d)·100 / 2000`, avec d en cm. 2000 cm = 20 m : pour d = 10 cm, on obtient 99,5 % |
 | Écho ultrason nul | `MeasureInCentimeters()` renvoie **0**, donc le remplissage vaut **100,00 %** |
-| Turbidité | `V = analogRead(A1)·5/1024`, puis `NTU = −1120,4·V² + 5742,3·V − 4352,9`. Formule valable environ pour 2,5 V ≤ V ≤ 4,2 V : à 5 V, elle donne −3 651 ; à 0 V, −4 352,9 ; vers 3,6 V, environ 1 800 |
+| Turbidité | `V = analogRead(A1)·5/1024`, puis `NTU = −1120,4·V² + 5742,3·V − 4352,9`. Formule valable environ pour 2,5 V ≤ V ≤ 4,2 V : à 5 V, elle donne −3 651 ; à 0 V, −4 352,9 ; environ 1 800 à la fois vers 3,6 V et vers 1,52 V (la parabole prend deux fois cette valeur) |
 | Électrovanne | broche D2 en sortie, **jamais mise à HIGH ou LOW** : la règle « niveau < 80 % → ouvrir » de l'algorigramme n'est pas codée |
 
 ## Lecture côté Processing (`interface_bassin.pde`)
