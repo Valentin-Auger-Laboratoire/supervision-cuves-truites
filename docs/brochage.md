@@ -38,11 +38,12 @@ Sources :
 | Alertes | aucune dans l'interface connectée (cuves toujours vertes) | La maquette statique montre la cuve 4 en rouge |
 
 ### Photo de l'écran pendant un test (`images/05-ecran-interface-test.jpg`)
-Valeurs affichées pour la cuve 1 : **Température 100,000**, **Turbidité 0,000**, **Remplissage 1783,440**. Elles ne sont pas à leur place :
-- 100 est la valeur typique du **remplissage** avec un écho ultrason nul ;
-- 1783 est une valeur typique de **turbidité** (V ≈ 3,6 V).
+Valeurs affichées pour la cuve 1 : **Température 100,000**, **Turbidité 0,000**, **Remplissage 1783,440**. Explication exacte :
+- 100 = **remplissage** avec un écho ultrason nul (d = 0 → 100,00 %) ;
+- 1783,44 = **turbidité** pour `analogRead(A1) = 311` exactement (V = 1,5186 V, hors de la plage 2,5 à 4,2 V ; 310 → 1771,99 et 312 → 1794,84) ;
+- la trame est arrivée **sans son premier champ** : `100.00,1783.44`. On obtient `v1 = 100` et `v2 = 1783.44`, puis `values[2]` lève une exception (ArrayIndexOutOfBounds), donc `v3` reste à 0.
 
-La trame lue par Processing n'avait donc pas la structure attendue : décalage d'une valeur, ou trame d'une version antérieure du programme. C'est une hypothèse, puisque la photo date de février et le programme transcrit de mars.
+La démo web reproduit cet écran à l'identique.
 
 ## Seuils du besoin (pour une version corrigée)
 

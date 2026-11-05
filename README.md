@@ -2,6 +2,9 @@
 
 🇫🇷 [Français](#français) · 🇬🇧 [English](#english)
 
+**▶ Démo web / Web demo :** https://valentin-auger-laboratoire.github.io/portfolio/demos/cuves-truites/
+4 cuves simulées sur 24 h, mon programme de 2023 rejoué (écran de la photo reconstitué) face à une version corrigée. / 4 tanks simulated over 24 h, my 2023 program replayed (the photo's screen reproduced) next to a corrected version.
+
 ![Interface de supervision pendant un test](images/05-ecran-interface-test.jpg)
 
 ---
@@ -79,9 +82,9 @@ En reprenant le projet, j'ai relu le code et la photo de l'écran comme on relit
 3. **Alertes : passer de la maquette à l'interface connectée.** La maquette montre l'alerte en rouge, mais l'interface connectée n'a pas encore de seuils. Pour la truite, les seuils évidents sont **20 °C** (stress) et **24 °C** (danger), une turbidité anormale et un niveau trop bas. Chaque cuve doit passer à l'orange ou au rouge en fonction de ces seuils.
 4. **Lecture série : diagnostic de la photo de l'écran.** Sur la photo du test, la cuve 1 affiche *Température 100*, *Turbidité 0* et *Remplissage 1783*. Ces nombres ne sont pas à leur place :
    - 100 % est exactement ce que donne le calcul de remplissage quand l'ultrason ne reçoit pas d'écho (d = 0) ;
-   - environ 1 800 NTU est une valeur typique du capteur de turbidité.
+   - 1783,44 correspond **exactement** à `analogRead(A1) = 311`, soit 1,52 V, avec la formule de turbidité (310 donnerait 1771,99 et 312 donnerait 1794,84). Le capteur était donc **hors de sa plage valable** (2,5 à 4,2 V).
 
-   La trame reçue par Processing n'avait donc pas la structure attendue : décalage d'une valeur, ou trame d'une version précédente du programme. Deux points du code favorisent ce genre de problème. Côté Arduino, la boucle n'a pas de `delay` et inonde le port série. Côté Processing, le code lit `values[1]` et `values[2]` après avoir seulement vérifié `values.length > 0`. Pour une version 2 : une trame balisée (`T=…;R=…;N=…`), une vérification du nombre de champs, une mesure par seconde, et le choix du port dans l'interface plutôt que `Serial.list()[2]`.
+   Une trame est arrivée **sans son premier champ** (la température) : `100.00,1783.44`. Processing a rangé 100 dans « Température » et 1783,44 dans « Remplissage ». Il a ensuite levé une exception en lisant `values[2]`, qui n'existait pas, si bien que « Turbidité » est restée à sa valeur initiale, 0. Ces trois causes réunies donnent exactement l'écran de la photo. Deux points du code favorisent ce genre de problème. Côté Arduino, la boucle n'a pas de `delay` et inonde le port série. Côté Processing, le code lit `values[1]` et `values[2]` après avoir seulement vérifié `values.length > 0`. Pour une version 2 : une trame balisée (`T=…;R=…;N=…`), une vérification du nombre de champs, une mesure par seconde, et le choix du port dans l'interface plutôt que `Serial.list()[2]`.
 5. **Turbidité : respecter le domaine de la formule.** Le polynôme d'étalonnage n'est valable qu'entre 2,5 et 4,2 V environ. En dehors de cette plage, il donne des valeurs négatives (−4 353 NTU à 0 V). Il faut borner la tension, signaler « hors plage » et étalonner le capteur avec une eau claire.
 6. **Matériel : adapter les capteurs à l'eau, puis multiplier par 4.** Le module de température Grove n'est pas étanche : pour une mesure dans l'eau, une sonde étanche, comme le DS18B20, convient mieux. Aujourd'hui, seule la cuve 1 est équipée. Pour 4 cuves, il faut 4 jeux de capteurs : un bus 1-Wire commun pour les sondes de température, des entrées analogiques ou un multiplexeur pour la turbidité, et 4 télémètres.
 
@@ -118,7 +121,7 @@ Final-year project in **STI2D, digital systems option** (French technology high-
 1. **Fill level:** the formula assumes a 20 m deep tank. It should use the measured empty and full distances, clamped to 0–100 %.
 2. **Valve:** the "level < 80 % → open" rule from the flowchart is not yet coded. It should be added with hysteresis, and the valve state should be sent back in the frame.
 3. **Alerts:** only the static mock-up shows a red alert. The live dashboard needs thresholds (20 °C and 24 °C for trout, turbidity, low level).
-4. **Serial reading:** the test photo shows *Temperature 100*, *Turbidity 0*, *Fill 1783*. 100 % is exactly the fill value when the ultrasonic sensor gets no echo, and about 1,800 NTU is a typical turbidity value, so the frame did not have the expected structure. An Arduino loop with no `delay` and a Processing check limited to `values.length > 0` make this possible. Version 2 would use a tagged frame, a field-count check, one reading per second, and port selection in the dashboard.
+4. **Serial reading:** the test photo shows *Temperature 100*, *Turbidity 0*, *Fill 1783*. 100 % is exactly the fill value when the ultrasonic sensor gets no echo, and 1783.44 is **exactly** `analogRead(A1) = 311` (1.52 V) through the turbidity formula, so the sensor was outside its valid range (2.5 to 4.2 V). A frame then arrived **without its first field** (`100.00,1783.44`): Processing put 100 into "Temperature" and 1783.44 into "Fill", then threw an exception on the missing `values[2]`, so "Turbidity" stayed at 0. Together, these three causes reproduce the photo exactly. An Arduino loop with no `delay` and a Processing check limited to `values.length > 0` make this possible. Version 2 would use a tagged frame, a field-count check, one reading per second, and port selection in the dashboard.
 5. **Turbidity:** the calibration polynomial is only valid for about 2.5 to 4.2 V. The voltage should be clamped and the sensor calibrated.
 6. **Hardware:** a waterproof temperature probe (such as a DS18B20) is better suited to water, and 4 sensor sets are needed for 4 tanks (only tank 1 is wired).
 
